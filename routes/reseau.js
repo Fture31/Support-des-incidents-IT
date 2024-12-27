@@ -1,41 +1,4 @@
-// const express = require('express');
-// const router = express.Router();
-// const connection = require('../config/database');
 
-// // Route pour la page de Maintenance
-// router.get('/reseau', (req, res) => {
-//     const query = "SELECT * FROM Posts   WHERE type = 'reseau'";
-//     connection.query(query, (err, results) => {
-//         if (err) {
-//             console.error('Database error:', err);
-//             res.status(500).send('Internal server error');
-//             return;
-//         }
-       
-//         res.render('reseau', { items: results ,username: req.session.username});
-//     });
-// });
-
-// module.exports = router;
-// const express = require('express');
-// const router = express.Router();
-// const connection = require('../config/database');
-
-// // Route pour la page de Maintenance
-// router.get('/Maintenance', (req, res) => {
-//     const query = "SELECT * FROM Posts WHERE type = 'Maintenance'";
-//     connection.query(query, (err, results) => {
-//         if (err) {
-//             console.error('Database error:', err);
-//             res.status(500).send('Internal server error');
-//             return;
-//         }
-       
-//         res.render('Maintenance', { items: results ,username: req.session.username});
-//     });
-// });
-
-// module.exports = router;
 const express = require('express');
 const router = express.Router();
 const connection = require('../config/database');

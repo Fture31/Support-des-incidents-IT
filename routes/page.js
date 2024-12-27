@@ -110,16 +110,7 @@ module.exports = function(io) {
             return res.status(401).send('User not logged in');
         }
     
-        // const query = `
-        // SELECT Notifications.*, Posts.libelle, Posts.type, Person.Name as commenterName
-        // FROM Notifications
-        // JOIN Posts ON Notifications.postId = Posts.id
-        // JOIN Comments ON Notifications.postId = Comments.postId
-        // JOIN Person ON Comments.userId = Person.id
-        // WHERE Notifications.userId = ?
-        // ORDER BY Notifications.createdAt DESC
-        //     LIMIT ? OFFSET ?
-        // `;
+    
             
         const query = `
         SELECT 
@@ -135,23 +126,6 @@ module.exports = function(io) {
         ORDER BY Notifications.createdAt DESC
         LIMIT ? OFFSET ?
     `;
-//     const query = `
-//     SELECT 
-//         Notifications.*, 
-//         Posts.libelle, 
-//         Posts.type, 
-//         Poster.Name AS posterName,  
-//         Poster.avatar AS posterAvatar
-//     FROM Notifications
-//     LEFT JOIN Posts ON Notifications.postId = Posts.id
-//     LEFT JOIN Person AS Poster ON Posts.userId = Poster.id
-//     WHERE Notifications.userId = ?
-//     ORDER BY Notifications.createdAt DESC
-//     LIMIT ? OFFSET ?;
-// `;
-
-
-
 
 
     
