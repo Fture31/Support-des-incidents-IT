@@ -1,0 +1,67 @@
+<div id="chat-container">
+    <div id="chat-box" class="bg-light">
+        <div id="messages-content"></div>
+        <form id="chat-form" class="input-group">
+            <input type="text" name="prompt" class="form-control" placeholder=" message...">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">send</button>
+            </div>
+        </form>
+    </div>
+</div> 
+<button id="chat-toggle-btn" class="btn btn-primary" >Chat</button>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script>
+ $(document).ready(function() {
+    $('#chat-toggle-btn').click(function() {
+        $('#chat-container').toggle();
+    });
+});
+
+document.getElementById('chat-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const prompt = event.target.prompt.value;
+
+    // Afficher le message de l'utilisateur dans le chat
+    const messagesContent = document.getElementById('messages-content');
+    const userMessage = document.createElement('div');
+    userMessage.textContent = `You: ${prompt}`;
+    messagesContent.appendChild(userMessage);
+
+    // Réinitialiser le champ de saisie
+    event.target.prompt.value = '';
+
+    try {
+        const response = await fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ prompt })
+        });
+        
+        const data = await response.json();
+        console.log('Response data:', data);
+
+        // Afficher le message du bot dans le div
+        const botMessage = document.createElement('div');
+        botMessage.textContent = `Bot: ${data.msg || 'Réponse vide'}`;
+        messagesContent.appendChild(botMessage);
+
+        // Afficher les erreurs s'il y en a
+        if (data.error) {
+            const errorMessage = document.createElement('div');
+            errorMessage.textContent = `Erreur: ${data.error}`;
+            messagesContent.appendChild(errorMessage);
+        }
+
+        // Défilement automatique vers le bas lors de l'ajout d'un nouveau message
+        messagesContent.scrollTop = messagesContent.scrollHeight;
+    } catch (error) {
+        console.error('Error:', error);
+        const errorMessage = document.createElement('div');
+        errorMessage.textContent = 'Une erreur est survenue.';
+        messagesContent.appendChild(errorMessage);
+    }
+}); 
+</script>

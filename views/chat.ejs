@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat</title>
+    <style>
+        .messages-content {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            max-height: 500px; /* Increased height */
+            overflow-y: auto;
+            width: 400px; /* Increased width */
+        }
+        .message-box {
+            display: flex; /* Align input and button horizontally */
+            justify-content: space-between;
+        }
+        .message-input {
+            width: 80%; /* Adjust width to fit with the button */
+            height: 100px; /* Increased height */
+            padding: 10px;
+        }
+        .message-submit {
+            display: block;
+            width: 18%; /* Adjusted to match input size */
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="messages">
+        <div class="messages-content" id="messages-content"></div>
+    </div>
+    <form id="chat-form">
+        <div class="message-box">
+            <textarea type="text" class="message-input" placeholder="Type message..." name="prompt"></textarea>
+            <button type="submit" class="message-submit sound-on-click">Send</button>
+        </div>
+    </form>
+
+    <script>
+        document.getElementById('chat-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const prompt = event.target.prompt.value;
+
+            // Display user message in the chat
+            const messagesContent = document.getElementById('messages-content');
+            const userMessage = document.createElement('div');
+            userMessage.textContent = `You: ${prompt}`;
+            messagesContent.appendChild(userMessage);
+
+            // Reset the input field
+            event.target.prompt.value = '';
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ prompt })
+                });
+                
+                const data = await response.json();
+                const botMessage = document.createElement('div');
+                botMessage.textContent = `Bot: ${data.msg}`; // Display bot message in the div
+
+                // Display errors if any
+                if (data.clientError || data.serverError) {
+                    const errorMessage = document.createElement('div');
+                    errorMessage.textContent = `Error: ${data.clientError ? 'Client' : 'Server'}`;
+                    messagesContent.appendChild(errorMessage);
+                }
+
+                messagesContent.appendChild(botMessage);
+            } catch (error) {
+                console.error('Error:', error);
+                const errorMessage = document.createElement('div');
+                errorMessage.textContent = 'An error occurred.';
+                messagesContent.appendChild(errorMessage);
+            }
+        });
+    </script>
+</body>
+</html>
